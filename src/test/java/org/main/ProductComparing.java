@@ -19,8 +19,8 @@ import org.page.FlipKartProductResultPOM;
 import org.page.FlipKartResultPOM;
 
 public class ProductComparing extends DriverUtils{
-	static double flipkartPrice=0.0;
-	static double amazonPrice=0.0;
+	double flipkartPrice=0.0;
+	double amazonPrice=0.0;
 	static String productName="";
 	static Map<String,String> tabIDs=new HashMap<>();
 	@BeforeClass
