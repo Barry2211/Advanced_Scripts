@@ -10,7 +10,7 @@ public class FlipKartResultPOM extends DriverUtils{
 		PageFactory.initElements(driver, this);
 	}
 	
-	@FindBy(xpath = "//div[@class='Nx9bqj CxhGGd']")
+	@FindBy(xpath = "(//div[contains(text(),'₹') and not(contains(text(),'/'))])[1]")
 	private WebElement productPrice;
 	
 	public WebElement getProductPrice() {

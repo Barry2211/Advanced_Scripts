@@ -1,5 +1,6 @@
 package org.main;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,9 +9,13 @@ import java.util.Set;
 import org.baseclass.DriverUtils;
 import org.baseclass.MethodUtils;
 import org.baseclass.ProductModels;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.page.AmazonHomePOM;
 import org.page.AmazonProductResultsPOM;
 import org.page.AmazonResultPOM;
@@ -19,15 +24,18 @@ import org.page.FlipKartProductResultPOM;
 import org.page.FlipKartResultPOM;
 
 public class ProductComparing extends DriverUtils{
-	double flipkartPrice=0.0;
-	double amazonPrice=0.0;
+	static double flipkartPrice=0.0;
+	static double amazonPrice=0.0;
 	static String productName="";
+	static WebDriverWait wait ;
+
 	static Map<String,String> tabIDs=new HashMap<>();
 	@BeforeClass
 	public static void driverConfig() {
 		System.out.println(100);
 		driverInit(MethodUtils.EDGE,"https://www.amazon.in/");
 		driverWait(5);
+		wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 		List<ProductModels> testData = getTestData("D:\\Eclipse\\eclipse\\bin\\FileReadingProducts\\src\\test\\resources\\Excel Data\\TestData.xlsx", "Sheet1");
 		productName = testData.get(0).getBrand();
 		tabIDs.put("amazon",driver.getWindowHandle());
@@ -69,22 +77,25 @@ public class ProductComparing extends DriverUtils{
 		homePom.getSearchBox().submit();
 		FlipKartProductResultPOM productPom = new FlipKartProductResultPOM();
 		productPom.getProduct().click();
+		
 		windows = driver.getWindowHandles();
 		for(String winID:windows) {
 			System.out.println(winID);
 			if(!tabIDs.containsValue(winID)) {
 				driver.switchTo().window(winID);
-				System.out.println("Switched");
+				System.out.println("Switched to ID: "+winID);
 			}
 		}
 		FlipKartResultPOM resultPom = new FlipKartResultPOM();
-		String text = resultPom.getProductPrice().getText();
+		WebElement price = wait.until(ExpectedConditions.visibilityOf(resultPom.getProductPrice()));
+		String text = price.getText();
 		String replace = text.replaceAll("[^0-9]", "");
 		flipkartPrice = Double.parseDouble(replace);
 		System.out.println(flipkartPrice);
 	}
-	@Test
-	public void test3() {
+	
+	@AfterClass
+	public static void priceCompare() {
 		double diff = 0.0;
 		System.out.println(3);
 		if(amazonPrice < flipkartPrice) {
