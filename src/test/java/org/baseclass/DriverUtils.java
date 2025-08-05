@@ -233,6 +233,10 @@ public class DriverUtils implements javaScriptCommands{
 		((JavascriptExecutor) driver).executeScript(command);
 	}
 	
+	public static void javascript(String command,WebElement element){
+		((JavascriptExecutor) driver).executeScript(command,element);
+	}
+	
 	 public static List<ProductModels> getTestData(String filePath, String sheetName) {
 	        List<ProductModels> testData = new ArrayList<>();
 	        File file = new File(filePath);
