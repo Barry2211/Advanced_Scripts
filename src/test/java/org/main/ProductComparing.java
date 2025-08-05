@@ -39,7 +39,7 @@ public class ProductComparing extends DriverUtils{
 		List<ProductModels> testData = getTestData("D:\\Eclipse\\eclipse\\bin\\FileReadingProducts\\src\\test\\resources\\Excel Data\\TestData.xlsx", "Sheet1");
 		productName = testData.get(0).getBrand();
 		tabIDs.put("amazon",driver.getWindowHandle());
-	//	windowOp(MethodUtils.max);
+		windowOp(MethodUtils.max);
 		try {
 			if(locate(MethodUtils.xPath, "//button[@class='a-button-text']").isDisplayed()) {
 				locate(MethodUtils.xPath, "//button[@class='a-button-text']").click();
@@ -48,7 +48,6 @@ public class ProductComparing extends DriverUtils{
 	}
 	@Test
 	public void test1() {
-		System.out.println(1);
 		AmazonHomePOM homePom=new AmazonHomePOM();
 		type(productName, homePom.getSearchBox());
 		homePom.getSearchBtn().click();
@@ -61,7 +60,6 @@ public class ProductComparing extends DriverUtils{
 	}
 	@Test
 	public void test2() {
-		System.out.println(2);
 		windowOp(MethodUtils.newWindow);
 		Set<String> windows = driver.getWindowHandles();
 		for(String winID:windows) {
@@ -87,7 +85,9 @@ public class ProductComparing extends DriverUtils{
 			}
 		}
 		FlipKartResultPOM resultPom = new FlipKartResultPOM();
-		WebElement price = wait.until(ExpectedConditions.visibilityOf(resultPom.getProductPrice()));
+		WebElement price = wait.until(ExpectedConditions.refreshed(
+			    ExpectedConditions.visibilityOf(resultPom.getProductPrice())
+			));
 		String text = price.getText();
 		String replace = text.replaceAll("[^0-9]", "");
 		flipkartPrice = Double.parseDouble(replace);
@@ -97,7 +97,6 @@ public class ProductComparing extends DriverUtils{
 	@AfterClass
 	public static void priceCompare() {
 		double diff = 0.0;
-		System.out.println(3);
 		if(amazonPrice < flipkartPrice) {
 			diff = flipkartPrice - amazonPrice;
 			System.out.println("Amazon is cost effective for the product: "+productName+" with difference of "+diff);
