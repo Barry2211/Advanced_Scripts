@@ -32,7 +32,6 @@ public class ProductComparing extends DriverUtils{
 	static Map<String,String> tabIDs=new HashMap<>();
 	@BeforeClass
 	public static void driverConfig() {
-		System.out.println(100);
 		driverInit(MethodUtils.EDGE,"https://www.amazon.in/");
 		driverWait(5);
 		wait = new WebDriverWait(driver, Duration.ofSeconds(10));
